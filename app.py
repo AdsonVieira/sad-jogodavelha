@@ -76,7 +76,6 @@ class Game:
             print("\nJogador ", move % 2 + 1)
 
             self.show_board()
-
            
             rows_columns = input("Informe a jogada ex: (4x6) ")
             rc = rows_columns.split('x')
@@ -101,12 +100,17 @@ class Game:
             if self.checks_winner():
                 print("Jogador ",move%2 + 1," venceu ")
                 exit()
+
+            if self.tie():
+                print("O jogo empatou")
+                exit()
+
             move += 1
 
     def checks_winner(self):
 
         board = []
-        print(self.player_round)
+        #print(self.player_round)#
         if self.player_round == 1:
             board = self.board_one
         elif self.player_round == 2:
@@ -120,20 +124,20 @@ class Game:
         rows = board.sum(axis=1)
         if 3 in rows: 
             winner  += np.count_nonzero(rows == 3)
-            print("Ponto ", winner, "player", self.player_round)
+           # print("Ponto ", winner, "player", self.player_round)
             
     
         # verificando as colunas
         columns = board.sum(axis=0)
         if 3 in columns:
             winner  += np.count_nonzero(columns == 3)
-            print("Ponto ", winner, "player", self.player_round)
+            #print("Ponto ", winner, "player", self.player_round)
             
         # verificando as diagonais
         dlx = board.trace()
         if dlx == 3 or dlx == -3:
             winner  += np.count_nonzero(dlx == 3)
-            print("Ponto ", winner, "player", self.player_round)
+            #print("Ponto ", winner, "player", self.player_round)
 
 
         # print("matriz de pontos", winner)
@@ -143,6 +147,22 @@ class Game:
 
         return 0
 
+    def tie(self):
+
+        data_board_merge = self.board_merge()
+        
+        for i in range(self.rows):
+            for j in range(self.columns):
+                if self.block[i][j] == 1:
+                    data_board_merge[i][j] = self.block[i][j]
+                    
+        if 0 not in data_board_merge:
+            return 1
+
+        return 0
+       
+    
+    
     def board_merge(self):
 
         board_merge = np.zeros((self.rows, self.columns), dtype=int)
@@ -161,8 +181,13 @@ class Game:
     def plays_suggestion(self):
         # Verificar se o oponente pode marcar um ponto, se sim impedir a jogada
         # Caso não pesquisar em minha matriz onde eu posso marcar um ponto
-        # Caso nenhuma das alternativas acima seja contemplada verificar se é possível fazer uma jogada nas extremidades do tabuleir
+        # Caso nenhuma das alternativas acima seja contemplada verificar se é possível fazer uma jogada nas extremidades do tabuleiro
         pass
+
+    
+
+
+
 
 
 game = Game()
